@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@fastify/autoload": "^5.4.1",
+    "@fastify/env": "^4.1.0",
+    "@fastify/mongodb": "^6.1.0",
+    "@fastify/sensible": "^5.1.1",
+    "fastify": "^4.9.2",
+    "fastify-plugin": "^4.3.0",
+    "mongo-cursor-pagination": "^8.1.2"
+  }
+}
