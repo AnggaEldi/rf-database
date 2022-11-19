@@ -15,6 +15,8 @@ async function setConfig(fastify) {
         MSSQL_SERVER_NAME: { type: "string" },
         MSSQL_USER: { type: "string" },
         MSSQL_PWD: { type: "string" },
+        REGISTER_REWARD_PREM_DAY: { type: "number" },
+        REGISTER_REWARD_CASH: { type: "number" },
       },
     },
     dotenv: true,

@@ -23,4 +23,12 @@ module.exports = async function (fastify) {
       reply.send({ message: msg.USER_CREATE_SUCCESS });
     },
   });
+
+  fastify.get("/all", {
+    handler: async function (req, reply) {
+      const userData = await userService.getAllUser(fastify);
+      console.log("udata", userData);
+      reply.send({ message: "OK", data: userData });
+    },
+  });
 };
