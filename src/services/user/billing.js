@@ -19,7 +19,7 @@ const userCreateBilling = async (fastify, id, premiumDay, cash) => {
       `,
       function (err) {
         if (err) {
-          reject(err);
+          throw err;
         }
       }
     );
@@ -30,4 +30,57 @@ const userCreateBilling = async (fastify, id, premiumDay, cash) => {
   });
 };
 
-module.exports = { userCreateBilling };
+const userInsertCash = async (fastify, id, cash) => {
+  return new Promise(async (resolve, reject) => {
+    const userBilling = await userGetBilling(fastify, id);
+    if (!userBilling.length) {
+      reject({ message: "User billing not found." });
+      return false;
+    }
+    const insertCash = new Request(
+      ` UPDATE ${RF_BILLING_TABLE.TBL_USERSTATUS} 
+        SET [Cash] = @cash
+        WHERE id = @id
+      `,
+      function (err) {
+        if (err) {
+          reject(err);
+        }
+      }
+    );
+    insertCash.on("requestCompleted", function () {
+      resolve(true);
+    });
+    insertCash.addParameter("cash", TYPES.Int, userBilling[0].Cash + cash);
+    insertCash.addParameter("id", TYPES.VarChar, id);
+    fastify.mssql(DB.RF_BILLING, insertCash);
+  });
+};
+
+const userGetBilling = async (fastify, id) => {
+  return new Promise((resolve, reject) => {
+    let result = [];
+    const getBilling = new Request(
+      ` SELECT * FROM ${RF_BILLING_TABLE.TBL_USERSTATUS}
+        WHERE id = @id
+      `,
+      function (err) {
+        if (err) throw err;
+      }
+    );
+    getBilling.addParameter("id", TYPES.VarChar, id);
+    getBilling.on("row", (columns) => {
+      const entry = {};
+      columns.forEach((column) => {
+        entry[column.metadata.colName] = column.value;
+      });
+      result.push(entry);
+    });
+    getBilling.on("requestCompleted", function () {
+      resolve(result);
+    });
+    fastify.mssql(DB.RF_BILLING, getBilling);
+  });
+};
+
+module.exports = { userCreateBilling, userGetBilling, userInsertCash };

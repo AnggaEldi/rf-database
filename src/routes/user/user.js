@@ -1,6 +1,7 @@
 "use strict";
 
 const userService = require("../../services/user/user");
+const billingService = require("../../services/user/billing");
 const { msg } = require("../../constants/messages");
 
 module.exports = async function (fastify) {
@@ -21,6 +22,14 @@ module.exports = async function (fastify) {
         });
       }
       reply.send({ message: msg.USER_CREATE_SUCCESS });
+    },
+  });
+
+  fastify.post("/topup", {
+    handler: async function (req, reply) {
+      const { id, cash } = req.body;
+      const insertCash = await billingService.userInsertCash(fastify, id, cash);
+      reply.send(insertCash);
     },
   });
 
