@@ -1,7 +1,7 @@
 const msg = {
-  SUCCESS_USER_CREATE: "Success creating account.",
-  FAIL_USER_DUPLICATE: "User already exist",
-  FAIL_USER_NOT_CREATE: "Cannot create user, something went wrong",
+  USER_CREATE_SUCCESS: "Success creating account.",
+  USER_CREATE_FAIL_DUPLICATED: "User already exist",
+  USER_CREATE_FAIL: "Cannot create user, something went wrong",
 };
 
 module.exports = { msg };

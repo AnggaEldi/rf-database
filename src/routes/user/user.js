@@ -8,18 +8,19 @@ module.exports = async function (fastify) {
   fastify.post("/register", {
     schema: { body: userRegister },
     handler: async function (request, reply) {
-      const isUserExist = await userService.isUserExist(fastify, request);
-      if (isUserExist > 0) {
+      const userData = await userService.isUserExist(fastify, request);
+      if (userData > 0) {
         return reply.code(200).send({
-          message: msg.FAIL_USER_DUPLICATE,
+          message: msg.USER_CREATE_FAIL_DUPLICATED,
         });
       }
       const register = await userService.userRegister(fastify, request);
       if (!register) {
-        reply.code(201).send({
-          message: msg.SUCCESS_USER_CREATE,
+        return reply.send({
+          message: msg.USER_CREATE_FAIL,
         });
       }
+      reply.send({ message: msg.USER_CREATE_SUCCESS });
     },
   });
 };
